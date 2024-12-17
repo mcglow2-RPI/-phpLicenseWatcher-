@@ -18,7 +18,7 @@ services:
             MYSQL_USER: 'lmutilmon'
             MYSQL_PASSWORD: ''
             MYSQL_DATABASE: 'licenses'
-        restart: on-failure:5
+        restart: always
 
 volumes:
     mariadb-volume:

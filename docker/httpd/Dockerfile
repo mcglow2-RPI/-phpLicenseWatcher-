@@ -16,12 +16,24 @@ RUN apt-get update && apt-get install -y \
 		libfreetype6-dev \
 		libjpeg62-turbo-dev \
 		libpng-dev \
-	&& docker-php-ext-configure gd --with-freetype-dir=/usr  --with-jpeg-dir=/usr --with-png-dir=/usr \
+	&& docker-php-ext-configure gd \
 	&& docker-php-ext-install -j$(nproc) gd
+
+COPY ../composer.json /var/www/html
+COPY ../composer.lock /var/www/html
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+RUN composer install \
+    --no-interaction \
+    --no-plugins \
+    --no-scripts \
+    --no-dev \
+    --prefer-dist
 
 RUN mkdir -p /usr/local/bin
 COPY lmutil /usr/local/bin/
 RUN chmod 755 /usr/local/bin/lmutil
+# older lmutil need this
+RUN ln -sf /lib64/ld-linux-x86-64.so.2 /lib64/ld-lsb-x86-64.so.3
 
 WORKDIR /var/www/html
 RUN mkdir /app
