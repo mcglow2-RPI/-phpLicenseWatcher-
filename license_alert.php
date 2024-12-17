@@ -128,6 +128,12 @@ function send_email($message) {
     case "starttls":
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         break;
+    case "none":
+        fprintf(STDERR, "No encryption of sent email.\n");
+        $mail->SMTPAuth  = false;
+        $mail->SMTPSecure = '';
+        $mail->SMTPAutoTLS = false;
+        break;
     default:
         fprintf(STDERR, "Cannot mail license alerts.\n\$smtp_tls not properly set in config.php\n");
         exit(1);
